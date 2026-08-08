@@ -470,6 +470,7 @@
 <script>
 /* ---------- Data ---------- */
 const JOBS = [
+  /* Web Development */
   { title:"Data Scientist", company:"Meridian Analytics", skills:["Python","SQL","Machine Learning","Statistics","Pandas"] },
   { title:"Data Analyst", company:"Northbridge Retail", skills:["SQL","Excel","Python","Data Visualization","Statistics"] },
   { title:"Machine Learning Engineer", company:"Fernbank AI", skills:["Python","Machine Learning","TensorFlow","SQL","Statistics"] },
@@ -479,7 +480,93 @@ const JOBS = [
   { title:"DevOps Engineer", company:"Lattice Cloud", skills:["Linux","Docker","Git","CI/CD","Python"] },
   { title:"Cloud Engineer", company:"Summit Infra", skills:["AWS","Linux","Docker","Python","Git"] },
   { title:"Business Analyst", company:"Greyfield Partners", skills:["Excel","SQL","Data Visualization","Communication","Statistics"] },
-  { title:"Product Manager", company:"Alderwood Labs", skills:["Communication","Data Visualization","SQL","Agile","Excel"] }
+  { title:"Product Manager", company:"Alderwood Labs", skills:["Communication","Data Visualization","SQL","Agile","Excel"] },
+
+  { title:"WordPress Developer", company:"Havenly Web", skills:["PHP","WordPress","MySQL","HTML","CSS"] },
+  { title:"UI Developer", company:"Prism Interfaces", skills:["HTML","CSS","JavaScript","Figma","Sass"] },
+  { title:"PHP Developer", company:"Cascade Web Labs", skills:["PHP","MySQL","Laravel","HTML","Git"] },
+
+  /* Data & Analytics (additions) */
+  { title:"Data Engineer", company:"Pipeworks Data", skills:["Python","SQL","ETL","Apache Spark","Airflow"] },
+  { title:"BI Developer", company:"Clearwater Insights", skills:["SQL","Power BI","Tableau","Data Visualization","Excel"] },
+
+  /* Cloud & Infrastructure (additions) */
+  { title:"Site Reliability Engineer", company:"Northstar Ops", skills:["Linux","Kubernetes","Monitoring","Python","CI/CD"] },
+  { title:"Systems Administrator", company:"Corestone IT", skills:["Linux","Windows Server","Networking","Bash","Active Directory"] },
+  { title:"Network Engineer", company:"Trailhead Networks", skills:["Networking","Cisco","TCP/IP","Firewalls","Linux"] },
+
+  /* Product & Business (additions) */
+  { title:"Project Manager", company:"Anchorline Consulting", skills:["Agile","Communication","Jira","Scrum","Risk Management"] },
+  { title:"Scrum Master", company:"Ironwood Teams", skills:["Agile","Scrum","Communication","Jira","Facilitation"] },
+
+  /* Mobile Development */
+  { title:"Android Developer", company:"Pinecrest Mobile", skills:["Java","Kotlin","Android SDK","Git","REST APIs"] },
+  { title:"iOS Developer", company:"Fairview Apps", skills:["Swift","Xcode","iOS SDK","Git","REST APIs"] },
+  { title:"React Native Developer", company:"Bluecrest Mobile", skills:["JavaScript","React Native","React","Git","REST APIs"] },
+  { title:"Flutter Developer", company:"Willow Mobile Co", skills:["Dart","Flutter","Git","REST APIs","Firebase"] },
+
+  /* QA & Testing */
+  { title:"QA Engineer", company:"Steadfast QA", skills:["Manual Testing","Test Cases","SQL","Bug Tracking","Communication"] },
+  { title:"Automation Test Engineer", company:"Verity Testing", skills:["Selenium","Java","Python","Test Automation","Git"] },
+  { title:"Performance Test Engineer", company:"Loadline Systems", skills:["JMeter","Load Testing","SQL","Scripting","Monitoring"] },
+
+  /* Cybersecurity */
+  { title:"Security Analyst", company:"Wardstone Security", skills:["Network Security","SIEM","Risk Assessment","Linux","Python"] },
+  { title:"Penetration Tester", company:"Greyhat Labs", skills:["Ethical Hacking","Kali Linux","Networking","Python","Security Testing"] },
+  { title:"Cybersecurity Engineer", company:"Bastion Cyber", skills:["Firewalls","Security Protocols","Linux","Python","Incident Response"] },
+
+  /* UI/UX Design */
+  { title:"UI/UX Designer", company:"Studio Marrow", skills:["Figma","Wireframing","User Research","Prototyping","Adobe XD"] },
+  { title:"Product Designer", company:"Northlight Design", skills:["Figma","User Research","Prototyping","Design Systems","Communication"] },
+
+  /* Database */
+  { title:"Database Administrator", company:"Coreledger Data", skills:["SQL","MySQL","PostgreSQL","Backup & Recovery","Performance Tuning"] },
+  { title:"Database Developer", company:"Vaultrow Systems", skills:["SQL","PL/SQL","Database Design","Python","Git"] },
+
+  /* AI & Machine Learning (advanced) */
+  { title:"AI Engineer", company:"Nova Cognition", skills:["Python","Deep Learning","PyTorch","NLP","Statistics"] },
+  { title:"NLP Engineer", company:"Lexicon AI", skills:["Python","NLP","Transformers","Machine Learning","Statistics"] },
+  { title:"Computer Vision Engineer", company:"Visionary Labs", skills:["Python","OpenCV","Deep Learning","TensorFlow","Statistics"] },
+
+  /* Game Development */
+  { title:"Game Developer", company:"Emberlight Games", skills:["C++","Unity","Game Design","C#","Git"] },
+
+  /* Blockchain */
+  { title:"Blockchain Developer", company:"Ledgerforge", skills:["Solidity","Ethereum","Smart Contracts","JavaScript","Git"] },
+
+  /* Embedded & IoT */
+  { title:"Embedded Systems Engineer", company:"Circuitpath", skills:["C","C++","Microcontrollers","RTOS","Git"] },
+  { title:"IoT Developer", company:"Meshgrid IoT", skills:["Python","IoT Protocols","Embedded C","Cloud Integration","Git"] },
+
+  /* Web Development — additional tech stacks */
+  { title:"Java Developer", company:"Oakridge Enterprise", skills:["Java","Spring Boot","SQL","REST APIs","Git"] },
+  { title:".NET Developer", company:"Brightfield Software", skills:["C#",".NET Core","SQL Server","REST APIs","Git"] },
+  { title:"Vue.js Developer", company:"Meadowlane Web", skills:["JavaScript","Vue.js","HTML","CSS","Git"] },
+  { title:"Angular Developer", company:"Silverline Apps", skills:["TypeScript","Angular","HTML","CSS","Git"] },
+  { title:"Ruby on Rails Developer", company:"Thistledown Labs", skills:["Ruby","Ruby on Rails","SQL","Git","REST APIs"] },
+  { title:"Shopify Developer", company:"Merchant Row", skills:["Shopify","Liquid","JavaScript","HTML","CSS"] },
+
+  /* Data & Analytics — additional depth */
+  { title:"Data Warehouse Engineer", company:"Silo Analytics", skills:["SQL","ETL","Snowflake","Data Modeling","Python"] },
+  { title:"Analytics Engineer", company:"Fieldstone Data", skills:["SQL","dbt","Python","Data Modeling","Git"] },
+  { title:"MLOps Engineer", company:"Runway ML", skills:["Python","Docker","Kubernetes","CI/CD","Machine Learning"] },
+
+  /* Cloud & Infrastructure — additional depth */
+  { title:"Cloud Architect", company:"Highpeak Cloud", skills:["AWS","Terraform","Networking","Security Protocols","Linux"] },
+  { title:"Azure Cloud Engineer", company:"Bluewave Cloud", skills:["Azure","PowerShell","Networking","Linux","CI/CD"] },
+  { title:"GCP Cloud Engineer", company:"Coastline Cloud", skills:["GCP","Kubernetes","Python","Linux","CI/CD"] },
+  { title:"Platform Engineer", company:"Foundry Infra", skills:["Kubernetes","Docker","Terraform","CI/CD","Python"] },
+  { title:"DevSecOps Engineer", company:"Ironclad Systems", skills:["Security Protocols","CI/CD","Docker","Linux","Python"] },
+
+  /* Product & Business — additional depth */
+  { title:"Salesforce Administrator", company:"Redwood CRM", skills:["Salesforce","Apex","Data Management","Communication","Reporting"] },
+  { title:"Salesforce Developer", company:"Redwood CRM", skills:["Apex","Salesforce","Visualforce","SOQL","Git"] },
+  { title:"SAP Consultant", company:"Ashgrove Enterprise", skills:["SAP","ABAP","Business Processes","SQL","Communication"] },
+  { title:"ERP Consultant", company:"Milltown Systems", skills:["ERP Systems","SQL","Business Analysis","Communication","Project Management"] },
+
+  /* Cybersecurity — additional depth */
+  { title:"Cloud Security Engineer", company:"Bastion Cyber", skills:["AWS","Security Protocols","IAM","Python","Risk Assessment"] },
+  { title:"SOC Analyst", company:"Wardstone Security", skills:["SIEM","Incident Response","Networking","Linux","Threat Detection"] }
 ];
 
 /* Groups roles into fields so we can show vacancies for the user's chosen
@@ -487,23 +574,68 @@ const JOBS = [
 const ROLE_CATEGORIES = [
   {
     name: "Web Development",
-    keywords: ["web development","web developer","web dev","frontend","front-end","front end","backend","back-end","back end","full stack","fullstack","full-stack","developer","software developer","software engineer","web"],
-    roles: ["Frontend Developer","Backend Developer","Full Stack Developer"]
+    keywords: ["web development","web developer","web dev","frontend","front-end","front end","backend","back-end","back end","full stack","fullstack","full-stack","developer","software developer","software engineer","web","wordpress","php","ui developer","java developer","java",".net developer","dotnet","c#","vue","vue.js","angular","ruby on rails","ruby","shopify"],
+    roles: ["Frontend Developer","Backend Developer","Full Stack Developer","WordPress Developer","UI Developer","PHP Developer","Java Developer",".NET Developer","Vue.js Developer","Angular Developer","Ruby on Rails Developer","Shopify Developer"]
   },
   {
     name: "Data & Analytics",
-    keywords: ["data science","data scientist","data analytics","data analyst","analytics","machine learning","ml engineer","data"],
-    roles: ["Data Scientist","Data Analyst","Machine Learning Engineer","Business Analyst"]
+    keywords: ["data science","data scientist","data analytics","data analyst","analytics","machine learning","ml engineer","data","data engineer","business intelligence","bi developer","data warehouse","analytics engineer","mlops","ml ops"],
+    roles: ["Data Scientist","Data Analyst","Machine Learning Engineer","Business Analyst","Data Engineer","BI Developer","Data Warehouse Engineer","Analytics Engineer","MLOps Engineer"]
   },
   {
     name: "Cloud & Infrastructure",
-    keywords: ["devops","dev ops","cloud","infrastructure","sre","site reliability"],
-    roles: ["DevOps Engineer","Cloud Engineer"]
+    keywords: ["devops","dev ops","cloud","infrastructure","sre","site reliability","system admin","systems administrator","network engineer","networking","cloud architect","azure","gcp","google cloud","platform engineer","devsecops"],
+    roles: ["DevOps Engineer","Cloud Engineer","Site Reliability Engineer","Systems Administrator","Network Engineer","Cloud Architect","Azure Cloud Engineer","GCP Cloud Engineer","Platform Engineer","DevSecOps Engineer"]
   },
   {
     name: "Product & Business",
-    keywords: ["product management","product manager","business analyst","business analysis","product"],
-    roles: ["Product Manager","Business Analyst"]
+    keywords: ["product management","product manager","business analyst","business analysis","product","project manager","project management","scrum master","scrum","salesforce","sap","erp","apex"],
+    roles: ["Product Manager","Business Analyst","Project Manager","Scrum Master","Salesforce Administrator","Salesforce Developer","SAP Consultant","ERP Consultant"]
+  },
+  {
+    name: "Mobile Development",
+    keywords: ["mobile development","mobile developer","android","ios","react native","flutter","app developer","mobile app"],
+    roles: ["Android Developer","iOS Developer","React Native Developer","Flutter Developer"]
+  },
+  {
+    name: "QA & Testing",
+    keywords: ["qa","quality assurance","test engineer","testing","automation testing","manual testing","performance testing"],
+    roles: ["QA Engineer","Automation Test Engineer","Performance Test Engineer"]
+  },
+  {
+    name: "Cybersecurity",
+    keywords: ["cybersecurity","cyber security","security analyst","penetration testing","pen testing","ethical hacking","security engineer","infosec","cloud security","soc analyst","soc","threat detection"],
+    roles: ["Security Analyst","Penetration Tester","Cybersecurity Engineer","Cloud Security Engineer","SOC Analyst"]
+  },
+  {
+    name: "UI/UX Design",
+    keywords: ["ui/ux","ui ux","ux design","ui design","product design","product designer","user experience","user interface"],
+    roles: ["UI/UX Designer","Product Designer"]
+  },
+  {
+    name: "Database",
+    keywords: ["database administrator","dba","database developer","database"],
+    roles: ["Database Administrator","Database Developer"]
+  },
+  {
+    name: "AI & Machine Learning",
+    keywords: ["ai engineer","artificial intelligence","deep learning","nlp","natural language processing","computer vision","ai/ml"],
+    roles: ["AI Engineer","NLP Engineer","Computer Vision Engineer"]
+  },
+  {
+    name: "Game Development",
+    keywords: ["game development","game developer","game design","unity","unreal"],
+    roles: ["Game Developer"]
+  },
+  {
+    name: "Blockchain",
+    keywords: ["blockchain","blockchain developer","web3","smart contracts","solidity","crypto"],
+    roles: ["Blockchain Developer"]
+  },
+  {
+    name: "Embedded & IoT",
+    keywords: ["embedded systems","embedded engineer","iot","internet of things","firmware","microcontrollers"],
+    roles: ["Embedded Systems Engineer","IoT Developer"]
   }
 ];
 
@@ -511,19 +643,38 @@ const ROLE_GUIDANCE_INTRO = {
   "Web Development": "Web development hiring leans heavily on what you've shipped — a couple of live, working projects usually outweigh a longer skills list.",
   "Data & Analytics": "Data roles are evaluated on how you reason with real datasets — pair each skill below with a small analysis or model you can walk someone through.",
   "Cloud & Infrastructure": "Cloud and infra roles reward hands-on comfort with real systems — set up and break things in a sandbox environment rather than only reading docs.",
-  "Product & Business": "Product and business roles hinge on communication and structured thinking — practice explaining trade-offs clearly as much as the tools themselves."
+  "Product & Business": "Product and business roles hinge on communication and structured thinking — practice explaining trade-offs clearly as much as the tools themselves.",
+  "Mobile Development": "Mobile hiring managers want to see an app in a real app store or at least on a real device — a polished demo build carries more weight than listed skills alone.",
+  "QA & Testing": "QA roles are judged on how thorough and repeatable your testing process is — keep a sample test plan or bug report ready to show, not just tool names.",
+  "Cybersecurity": "Security roles favor demonstrated practice over theory — a home lab, CTF write-up, or documented vulnerability finding goes a long way.",
+  "UI/UX Design": "Design roles are portfolio-first — have 2–3 case studies ready that show your process, not just final screens.",
+  "Database": "Database roles are evaluated on query performance and data integrity instincts — be ready to explain how you'd optimize a slow query, not just write one.",
+  "AI & Machine Learning": "AI/ML roles expect you to explain trade-offs in model choice and data handling — a small end-to-end project beats listing frameworks.",
+  "Game Development": "Game dev hiring is driven almost entirely by a playable demo or reel — prioritize finishing one small game over learning more tools.",
+  "Blockchain": "Blockchain roles want proof you can ship and secure a contract — a deployed testnet project matters more than terminology.",
+  "Embedded & IoT": "Embedded/IoT roles value hands-on hardware experience — a working prototype (even a simple one) demonstrates more than the skills list alone."
 };
 
 function findRoleCategory(goal){
   if(!goal) return null;
   const g = goal.trim().toLowerCase();
   if(!g) return null;
-  // exact role title match first
+  // exact role title match first (e.g. typing "Android Developer" exactly)
   const byTitle = ROLE_CATEGORIES.find(cat => cat.roles.some(r => r.toLowerCase() === g));
   if(byTitle) return byTitle;
-  // keyword match
-  const byKeyword = ROLE_CATEGORIES.find(cat => cat.keywords.some(k => g.includes(k) || k.includes(g)));
-  return byKeyword || null;
+  // keyword match — pick the LONGEST matching keyword across all categories,
+  // so a specific term like "android developer" wins over a generic one
+  // like "developer" that might otherwise match the wrong field first.
+  let best = null, bestLen = 0;
+  ROLE_CATEGORIES.forEach(cat=>{
+    cat.keywords.forEach(k=>{
+      if(g.includes(k) || k.includes(g)){
+        const len = Math.min(k.length, g.length) === k.length ? k.length : g.length;
+        if(len > bestLen){ bestLen = len; best = cat; }
+      }
+    });
+  });
+  return best;
 }
 
 const LEARNING_HINTS = {
