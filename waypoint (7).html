@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waypoint — Job Recommendation &amp; Career Guidance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f1610;
+    --bg-2:#141d16;
+    --surface:#1a251c;
+    --surface-2:#212e22;
+    --line:#2c3a2c;
+    --text:#eef2ec;
+    --text-dim:#9db09a;
+    --text-faint:#6d8069;
+    --blaze:#e8a33d;
+    --blaze-dim:#a9782f;
+    --growth:#7fae8e;
+    --gap:#c1666b;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232,163,61,0.08), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.01em;}
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+  }
+
+  /* ===== Contour background ===== */
+  .contours{
+    position:absolute; inset:0; width:100%; height:100%;
+    opacity:0.35; pointer-events:none;
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative; overflow:hidden;
+    padding:76px 24px 64px;
+    border-bottom:1px solid var(--line);
+    background:var(--bg-2);
+  }
+  .hero-inner{
+    max-width:920px; margin:0 auto; position:relative; z-index:2; text-align:center;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:0.16em;
+    text-transform:uppercase; color:var(--blaze); display:flex; align-items:center;
+    justify-content:center; gap:10px; margin-bottom:22px;
+  }
+  .eyebrow::before, .eyebrow::after{ content:""; width:28px; height:1px; background:var(--blaze-dim); }
+  .hero h1{
+    font-size:clamp(32px, 5.4vw, 58px); line-height:1.06; margin:0 0 20px;
+    color:var(--text);
+  }
+  .hero h1 em{ font-style:italic; color:var(--blaze); }
+  .hero p{ font-size:17px; line-height:1.6; color:var(--text-dim); max-width:560px; margin:0 auto 34px; }
+  .compass{ width:120px; height:120px; margin:0 auto 28px; }
+  .cta-row{ display:flex; justify-content:center; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:'Inter', sans-serif; font-size:14.5px; font-weight:600; cursor:pointer;
+    border-radius:999px; padding:13px 26px; border:1px solid transparent; transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn:active{ transform:scale(0.97); }
+  .btn:focus-visible{ outline:2px solid var(--blaze); outline-offset:3px; }
+  .btn-primary{ background:var(--blaze); color:#1a1206; }
+  .btn-primary:hover{ background:#f0ae4d; }
+  .btn-ghost{ background:transparent; color:var(--text-dim); border-color:var(--line); }
+  .btn-ghost:hover{ color:var(--text); border-color:var(--text-faint); }
+
+  /* ===== HOW IT WORKS ===== */
+  .how-section{ background:var(--bg); padding:64px 24px; border-bottom:1px solid var(--line); }
+  .how-inner{ max-width:1000px; margin:0 auto; }
+  .how-head{ text-align:center; margin-bottom:38px; }
+  .how-head h2{ font-size:28px; margin:8px 0 0; }
+  .how-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:18px; }
+  .how-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px 20px; text-align:left;
+  }
+  .how-card .dot{
+    display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px;
+    border-radius:50%; background:var(--surface-2); border:1px solid var(--line); color:var(--blaze);
+    font-size:12px; margin-bottom:14px;
+  }
+  .how-card h3{ font-family:'Inter',sans-serif; font-size:15px; font-weight:600; margin:0 0 8px; }
+  .how-card p{ font-size:13.5px; color:var(--text-dim); line-height:1.5; margin:0; }
+
+  /* ===== TRAIL STEPPER ===== */
+  .trail-wrap{
+    position:sticky; top:0; z-index:50; background:rgba(15,22,16,0.92);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line); padding:18px 24px;
+  }
+  .trail{
+    max-width:920px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;
+    position:relative;
+  }
+  .trail-line{
+    position:absolute; top:15px; left:24px; right:24px; height:2px; background:var(--line); z-index:0;
+  }
+  .trail-line-fill{
+    position:absolute; top:15px; left:24px; height:2px; background:var(--blaze); z-index:1;
+    transition:width .5s cubic-bezier(.4,0,.2,1); width:0%;
+  }
+  .waypoint{
+    position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:8px;
+    cursor:default; background:transparent; border:none; font-family:inherit;
+  }
+  .waypoint .dot{
+    width:32px; height:32px; border-radius:50%; background:var(--surface-2); border:2px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace;
+    font-size:12px; color:var(--text-faint); transition:all .3s ease;
+  }
+  .waypoint.done .dot{ background:var(--blaze); border-color:var(--blaze); color:#1a1206; }
+  .waypoint.active .dot{ border-color:var(--blaze); color:var(--blaze); box-shadow:0 0 0 4px rgba(232,163,61,0.15); }
+  .waypoint .label{ font-size:11.5px; color:var(--text-faint); letter-spacing:0.02em; display:none; }
+  .waypoint.active .label{ color:var(--blaze); }
+  @media(min-width:640px){ .waypoint .label{ display:block; } }
+
+  /* ===== STEPS ===== */
+  main{ max-width:760px; margin:0 auto; padding:56px 24px 120px; }
+  .step{ display:none; animation:rise .45s ease; }
+  .step.visible{ display:block; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:translateY(0);} }
+
+  .step-head{ margin-bottom:32px; }
+  .step-num{ font-family:'JetBrains Mono',monospace; color:var(--blaze); font-size:13px; letter-spacing:0.1em; }
+  .step-head h2{ font-size:28px; margin:8px 0 6px; }
+  .step-head p{ color:var(--text-dim); font-size:15px; margin:0; line-height:1.55; }
+
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:28px;
+  }
+
+  label{ display:block; font-size:13px; color:var(--text-dim); margin-bottom:7px; font-weight:500; }
+  .auth-tabs{ display:flex; gap:6px; background:var(--surface-2); border:1px solid var(--line); border-radius:999px; padding:4px; margin-bottom:24px; }
+  .auth-tab{
+    flex:1; border:none; background:transparent; color:var(--text-faint); font-family:'Inter',sans-serif;
+    font-size:14px; font-weight:600; padding:10px 0; border-radius:999px; cursor:pointer; transition:all .2s ease;
+  }
+  .auth-tab.active{ background:var(--blaze); color:#1a1206; }
+  input[type=text], input[type=email], input[type=password], select{
+    width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px;
+    padding:12px 14px; color:var(--text); font-family:'Inter',sans-serif; font-size:14.5px; margin-bottom:20px;
+    transition:border-color .15s ease;
+  }
+  input:focus, select:focus{ outline:none; border-color:var(--blaze); }
+  select{ appearance:none; background-image:linear-gradient(45deg, transparent 50%, var(--text-dim) 50%), linear-gradient(135deg, var(--text-dim) 50%, transparent 50%); background-position: calc(100% - 20px) center, calc(100% - 15px) center; background-size:5px 5px, 5px 5px; background-repeat:no-repeat; }
+
+  .chip-input-row{ display:flex; gap:8px; margin-bottom:12px; }
+  .chip-input-row input{ margin-bottom:0; flex:1; }
+  .chip-input-row button{ white-space:nowrap; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px; min-height:36px; }
+  .chip{
+    font-family:'JetBrains Mono',monospace; font-size:12.5px; background:var(--surface-2); color:var(--text);
+    border:1px solid var(--line); padding:7px 12px; border-radius:999px; display:flex; align-items:center; gap:8px;
+  }
+  .chip button{ background:none; border:none; color:var(--text-faint); cursor:pointer; font-size:14px; line-height:1; padding:0; }
+  .chip button:hover{ color:var(--gap); }
+  .hint{ font-size:12.5px; color:var(--text-faint); margin:-14px 0 20px; }
+  .suggest-box{
+    position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:20;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:9px;
+    max-height:190px; overflow-y:auto; display:none;
+  }
+  .suggest-box.open{ display:block; }
+  .suggest-item{
+    padding:10px 14px; font-size:13.5px; color:var(--text); cursor:pointer; border-bottom:1px solid var(--line);
+  }
+  .suggest-item:last-child{ border-bottom:none; }
+  .suggest-item:hover, .suggest-item.highlight{ background:var(--surface); color:var(--blaze); }
+  .suggest-empty{ padding:10px 14px; font-size:13px; color:var(--text-faint); }
+  .error{ color:var(--gap); font-size:13px; margin:-10px 0 16px; display:none; }
+
+  /* job cards */
+  .job-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:24px; margin-bottom:16px; display:flex; gap:22px; align-items:flex-start;
+  }
+  .gauge{ flex-shrink:0; width:78px; height:78px; position:relative; }
+  .gauge svg{ transform:rotate(-90deg); }
+  .gauge-pct{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:500;
+  }
+  .job-body{ flex:1; min-width:0; }
+  .job-title{ font-family:'Fraunces',serif; font-size:19px; margin:0 0 3px; }
+  .job-meta{ font-size:13px; color:var(--text-faint); margin:0 0 14px; }
+  .skill-row{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+  .skill-tag{
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; padding:4px 9px; border-radius:6px;
+  }
+  .skill-tag.matched{ background:rgba(127,174,142,0.14); color:var(--growth); border:1px solid rgba(127,174,142,0.3); }
+  .skill-tag.missing{ background:rgba(193,102,107,0.12); color:var(--gap); border:1px solid rgba(193,102,107,0.28); }
+  .row-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-faint); margin:10px 0 6px; }
+  .job-select-btn{
+    margin-top:14px; background:none; border:1px solid var(--line); color:var(--text-dim);
+    font-family:'Inter',sans-serif; font-size:13px; padding:8px 16px; border-radius:999px; cursor:pointer;
+  }
+  .job-select-btn:hover{ border-color:var(--blaze); color:var(--blaze); }
+  .job-select-btn.chosen{ background:var(--blaze); border-color:var(--blaze); color:#1a1206; font-weight:600; }
+  .apply-row{ display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  .apply-link{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--growth); text-decoration:none;
+    border:1px solid rgba(127,174,142,0.3); padding:6px 12px; border-radius:999px; transition:all .15s ease;
+  }
+  .apply-link:hover{ background:rgba(127,174,142,0.12); border-color:var(--growth); }
+
+  .match-section-title{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--blaze); margin:28px 0 4px;
+  }
+  .match-section-title:first-child{ margin-top:0; }
+  .match-section-note{ font-size:13px; color:var(--text-dim); margin:0 0 16px; line-height:1.5; }
+
+  /* guidance */
+  .guidance-lead{
+    background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--blaze);
+    border-radius:10px; padding:20px 22px; margin-bottom:26px; font-size:15.5px; line-height:1.6;
+  }
+  .guidance-lead b{ color:var(--blaze); }
+  .learn-item{
+    display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-top:1px solid var(--line);
+  }
+  .learn-item:first-of-type{ border-top:none; }
+  .learn-badge{
+    flex-shrink:0; width:34px; height:34px; border-radius:50%; background:var(--surface-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--gap);
+  }
+  .learn-body h4{ margin:0 0 4px; font-size:15px; font-family:'Inter',sans-serif; font-weight:600; }
+  .learn-body p{ margin:0; font-size:13.5px; color:var(--text-dim); line-height:1.5; }
+
+  .footer-nav{ display:flex; justify-content:space-between; margin-top:36px; }
+
+  ::selection{ background:var(--blaze); color:#1a1206; }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <svg class="contours" viewBox="0 0 1000 500" preserveAspectRatio="none">
+    <g fill="none" stroke="#7fae8e" stroke-width="1">
+      <path d="M -50 450 Q 200 380 450 430 T 1050 400" opacity="0.5"/>
+      <path d="M -50 400 Q 200 330 450 380 T 1050 350" opacity="0.4"/>
+      <path d="M -50 350 Q 200 280 450 330 T 1050 300" opacity="0.3"/>
+      <path d="M -50 60 Q 250 10 500 55 T 1050 40" opacity="0.3"/>
+      <path d="M -50 100 Q 250 55 500 95 T 1050 85" opacity="0.4"/>
+    </g>
+  </svg>
+  <div class="hero-inner">
+    <svg class="compass" viewBox="0 0 120 120" fill="none">
+      <circle cx="60" cy="60" r="54" stroke="#2c3a2c" stroke-width="1.5"/>
+      <circle cx="60" cy="60" r="40" stroke="#2c3a2c" stroke-width="1"/>
+      <path d="M60 20 L67 58 L60 100 L53 58 Z" fill="#e8a33d" opacity="0.9"/>
+      <path d="M20 60 L58 53 L100 60 L58 67 Z" fill="#4a5c47"/>
+      <circle cx="60" cy="60" r="4.5" fill="#eef2ec"/>
+    </svg>
+    <div class="eyebrow">Job Recommendation &amp; Career Guidance</div>
+    <h1>Every skill you have is a<br><em>step already taken.</em></h1>
+    <p>Waypoint reads your skills against real job requirements, ranks the roles you're closest to, and marks the exact ground you still need to cover.</p>
+    <div class="cta-row">
+      <button class="btn btn-primary" onclick="goToStep(1)">Start your route</button>
+      <button class="btn btn-ghost" onclick="toggleHowItWorks()">How it works</button>
+    </div>
+  </div>
+</section>
+
+<section class="how-section" id="how-it-works" style="display:none;">
+  <div class="how-inner">
+    <div class="how-head">
+      <div class="step-num mono">THE ROUTE</div>
+      <h2>Five stops, one trail</h2>
+    </div>
+    <div class="how-grid">
+      <div class="how-card">
+        <span class="dot mono">01</span>
+        <h3>Register or sign in</h3>
+        <p>Set up a candidate profile with your name and email.</p>
+      </div>
+      <div class="how-card">
+        <span class="dot mono">02</span>
+        <h3>Skills &amp; interests</h3>
+        <p>List what you know and the role you're aiming for.</p>
+      </div>
+      <div class="how-card">
+        <span class="dot mono">03</span>
+        <h3>Search jobs</h3>
+        <p>We match your skills against every open listing.</p>
+      </div>
+      <div class="how-card">
+        <span class="dot mono">04</span>
+        <h3>View recommendations</h3>
+        <p>Top matches ranked by suitability, with matched and missing skills shown.</p>
+      </div>
+      <div class="how-card">
+        <span class="dot mono">05</span>
+        <h3>Career guidance</h3>
+        <p>See exactly what to learn next to qualify for your chosen role.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trail-wrap" id="trailWrap" style="display:none;">
+  <nav class="trail">
+    <div class="trail-line"></div>
+    <div class="trail-line-fill" id="trailFill"></div>
+    <button class="waypoint" data-step="1"><span class="dot mono">01</span><span class="label">Sign in</span></button>
+    <button class="waypoint" data-step="2"><span class="dot mono">02</span><span class="label">Skills</span></button>
+    <button class="waypoint" data-step="3"><span class="dot mono">03</span><span class="label">Search</span></button>
+    <button class="waypoint" data-step="4"><span class="dot mono">04</span><span class="label">Matches</span></button>
+    <button class="waypoint" data-step="5"><span class="dot mono">05</span><span class="label">Guidance</span></button>
+    <button class="waypoint" data-step="6"><span class="dot mono">06</span><span class="label">Contact</span></button>
+  </nav>
+</div>
+
+<main>
+
+  <!-- STEP 1: LOGIN / REGISTER -->
+  <section class="step" id="step-1">
+    <div class="step-head">
+      <div class="step-num mono">WAYPOINT 01</div>
+      <h2>Who's heading out?</h2>
+      <p>New here? Register a profile. Already started a session? Sign back in.</p>
+    </div>
+    <div class="card">
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" id="tabRegister" onclick="switchAuthTab('register')">Register</button>
+        <button type="button" class="auth-tab" id="tabSignin" onclick="switchAuthTab('signin')">Sign In</button>
+      </div>
+
+      <div id="registerForm">
+        <label for="regName">Full name</label>
+        <input type="text" id="regName" placeholder="e.g. Srishti Singh">
+        <label for="regEmail">Email</label>
+        <input type="email" id="regEmail" placeholder="you@example.com">
+        <label for="regPassword">Password</label>
+        <input type="password" id="regPassword" placeholder="Choose a password">
+        <div class="error" id="registerError">Enter your name, email, and password to continue.</div>
+        <button class="btn btn-primary" style="width:100%;" onclick="submitRegister()">Create profile</button>
+      </div>
+
+      <div id="signinForm" style="display:none;">
+        <label for="signinEmail">Email</label>
+        <input type="email" id="signinEmail" placeholder="you@example.com">
+        <label for="signinPassword">Password</label>
+        <input type="password" id="signinPassword" placeholder="Your password">
+        <div class="error" id="signinError">Enter the email and password you registered with.</div>
+        <button class="btn btn-primary" style="width:100%;" onclick="submitSignIn()">Sign in</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2: SKILLS -->
+  <section class="step" id="step-2">
+    <div class="step-head">
+      <div class="step-num mono">WAYPOINT 02</div>
+      <h2 id="greetHeading">Skills &amp; interests</h2>
+      <p>List what you already know, then tell us where you're headed. This is the map we'll match against.</p>
+    </div>
+    <div class="card">
+      <label for="skillInput">Your skills</label>
+      <div class="chip-input-row" style="position:relative;">
+        <div style="position:relative; flex:1;">
+          <input type="text" id="skillInput" autocomplete="off" placeholder="Search a skill — e.g. Python" oninput="renderSkillSuggestions()" onkeydown="if(event.key==='Enter'){event.preventDefault();addSkill();}">
+          <div class="suggest-box" id="skillSuggestions"></div>
+        </div>
+        <button class="btn btn-ghost" onclick="addSkill()">Add</button>
+      </div>
+      <div class="chips" id="skillChips"></div>
+      <div class="hint">Start typing to see matching skills — Python, SQL, Excel, Machine Learning, JavaScript, React, Git, Statistics, Docker, AWS, Linux, Communication, Agile, Data Visualization, and more.</div>
+
+      <label for="careerGoalInput">Career goal</label>
+      <div style="position:relative;">
+        <input type="text" id="careerGoalInput" autocomplete="off" placeholder="Search or type any role — e.g. Data Scientist" oninput="renderGoalSuggestions()" onfocus="renderGoalSuggestions()">
+        <div class="suggest-box" id="goalSuggestions"></div>
+      </div>
+      <div class="hint">Pick a suggestion, or just type any role that isn't on the list — it'll be saved as your goal either way.</div>
+
+      <div class="error" id="skillsError">Add at least one skill and enter a career goal.</div>
+      <button class="btn btn-primary" style="width:100%;" onclick="submitSkills()">Save profile</button>
+    </div>
+  </section>
+
+  <!-- STEP 3: SEARCH -->
+  <section class="step" id="step-3">
+    <div class="step-head">
+      <div class="step-num mono">WAYPOINT 03</div>
+      <h2>Ready to search</h2>
+      <p>We'll compare your skills against every open role in the listings and rank them by how much ground you've already covered.</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <p style="color:var(--text-dim); font-size:14px; margin-bottom:22px;">Profile locked in for <b id="reviewName" style="color:var(--text);">you</b> — aiming for <b id="reviewGoal" style="color:var(--blaze);">your chosen role</b> with <span id="reviewCount" style="color:var(--growth);">0</span> skills listed.</p>
+      <button class="btn btn-primary" onclick="findJobs()">Find jobs</button>
+    </div>
+  </section>
+
+  <!-- STEP 4: RECOMMENDATIONS -->
+  <section class="step" id="step-4">
+    <div class="step-head">
+      <div class="step-num mono">WAYPOINT 04</div>
+      <h2>Your top matches</h2>
+      <p>Vacancies for the goal you searched, plus related roles worth a look. Green tags are ground you've covered; red tags are what's still ahead. Pick a role to get guidance on it.</p>
+    </div>
+    <div id="jobResults"><p style="color:var(--text-faint); font-size:14px;">No search run yet — fill in your profile above, then click "Find jobs" to see your ranked matches here.</p></div>
+    <div class="footer-nav">
+      <span></span>
+      <button class="btn btn-primary" onclick="goToStep(5)" id="toGuidanceBtn">Get career guidance →</button>
+    </div>
+  </section>
+
+  <!-- STEP 5: GUIDANCE -->
+  <section class="step" id="step-5">
+    <div class="step-head">
+      <div class="step-num mono">WAYPOINT 05</div>
+      <h2>Career guidance</h2>
+      <p>The specific skills standing between you and your chosen role, in the order they'll unlock the most matches.</p>
+    </div>
+    <div class="guidance-lead" id="guidanceLead">Search jobs above and pick a role to see your personalized skill-gap guidance here.</div>
+    <div id="guidanceStrengths" style="display:none; margin-bottom:22px;"></div>
+    <div class="card" id="learnList" style="display:none;"></div>
+    <div class="footer-nav">
+      <button class="btn btn-ghost" onclick="goToStep(4)">← Back to matches</button>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-ghost" onclick="goToStep(6)">Have a question? →</button>
+        <button class="btn btn-ghost" onclick="restart()">Start over</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 6: CONTACT -->
+  <section class="step" id="step-6">
+    <div class="step-head">
+      <div class="step-num mono">WAYPOINT 06</div>
+      <h2>Have a question?</h2>
+      <p>Ask us anything about a role, a skill gap, or the platform itself — it goes straight to our team.</p>
+    </div>
+    <div class="card">
+      <label for="contactName">Name</label>
+      <input type="text" id="contactName" placeholder="Your name">
+      <label for="contactEmail">Email</label>
+      <input type="email" id="contactEmail" placeholder="you@example.com">
+      <label for="contactMessage">Your question</label>
+      <textarea id="contactMessage" rows="5" placeholder="Type your question here..." style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:12px 14px; color:var(--text); font-family:'Inter',sans-serif; font-size:14.5px; margin-bottom:12px; resize:vertical;"></textarea>
+      <div class="error" id="contactError">Write a message before sending.</div>
+      <div id="contactStatus" style="font-size:13.5px; color:var(--growth); margin-bottom:14px; display:none;"></div>
+      <button class="btn btn-primary" style="width:100%;" id="contactSubmitBtn" onclick="submitContactForm()">Send question</button>
+    </div>
+    <div class="footer-nav">
+      <button class="btn btn-ghost" onclick="goToStep(5)">← Back to guidance</button>
+      <span></span>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ---------- Data ---------- */
+const JOBS = [
+  { title:"Data Scientist", company:"Meridian Analytics", skills:["Python","SQL","Machine Learning","Statistics","Pandas"] },
+  { title:"Data Analyst", company:"Northbridge Retail", skills:["SQL","Excel","Python","Data Visualization","Statistics"] },
+  { title:"Machine Learning Engineer", company:"Fernbank AI", skills:["Python","Machine Learning","TensorFlow","SQL","Statistics"] },
+  { title:"Backend Developer", company:"Ridgeline Systems", skills:["Python","Django","SQL","REST APIs","Git"] },
+  { title:"Frontend Developer", company:"Cobalt Studio", skills:["JavaScript","React","HTML","CSS","Git"] },
+  { title:"Full Stack Developer", company:"Harbor & Co", skills:["JavaScript","React","Node.js","SQL","Git"] },
+  { title:"DevOps Engineer", company:"Lattice Cloud", skills:["Linux","Docker","Git","CI/CD","Python"] },
+  { title:"Cloud Engineer", company:"Summit Infra", skills:["AWS","Linux","Docker","Python","Git"] },
+  { title:"Business Analyst", company:"Greyfield Partners", skills:["Excel","SQL","Data Visualization","Communication","Statistics"] },
+  { title:"Product Manager", company:"Alderwood Labs", skills:["Communication","Data Visualization","SQL","Agile","Excel"] }
+];
+
+/* Groups roles into fields so we can show vacancies for the user's chosen
+   goal plus other closely related jobs, instead of an unrelated ranked list. */
+const ROLE_CATEGORIES = [
+  {
+    name: "Web Development",
+    keywords: ["web development","web developer","web dev","frontend","front-end","front end","backend","back-end","back end","full stack","fullstack","full-stack","developer","software developer","software engineer","web"],
+    roles: ["Frontend Developer","Backend Developer","Full Stack Developer"]
+  },
+  {
+    name: "Data & Analytics",
+    keywords: ["data science","data scientist","data analytics","data analyst","analytics","machine learning","ml engineer","data"],
+    roles: ["Data Scientist","Data Analyst","Machine Learning Engineer","Business Analyst"]
+  },
+  {
+    name: "Cloud & Infrastructure",
+    keywords: ["devops","dev ops","cloud","infrastructure","sre","site reliability"],
+    roles: ["DevOps Engineer","Cloud Engineer"]
+  },
+  {
+    name: "Product & Business",
+    keywords: ["product management","product manager","business analyst","business analysis","product"],
+    roles: ["Product Manager","Business Analyst"]
+  }
+];
+
+const ROLE_GUIDANCE_INTRO = {
+  "Web Development": "Web development hiring leans heavily on what you've shipped — a couple of live, working projects usually outweigh a longer skills list.",
+  "Data & Analytics": "Data roles are evaluated on how you reason with real datasets — pair each skill below with a small analysis or model you can walk someone through.",
+  "Cloud & Infrastructure": "Cloud and infra roles reward hands-on comfort with real systems — set up and break things in a sandbox environment rather than only reading docs.",
+  "Product & Business": "Product and business roles hinge on communication and structured thinking — practice explaining trade-offs clearly as much as the tools themselves."
+};
+
+function findRoleCategory(goal){
+  if(!goal) return null;
+  const g = goal.trim().toLowerCase();
+  if(!g) return null;
+  // exact role title match first
+  const byTitle = ROLE_CATEGORIES.find(cat => cat.roles.some(r => r.toLowerCase() === g));
+  if(byTitle) return byTitle;
+  // keyword match
+  const byKeyword = ROLE_CATEGORIES.find(cat => cat.keywords.some(k => g.includes(k) || k.includes(g)));
+  return byKeyword || null;
+}
+
+const LEARNING_HINTS = {
+  "Machine Learning":"Start with a foundations course covering supervised learning, then build one end-to-end model.",
+  "TensorFlow":"Follow an applied deep-learning course and reimplement one of your models in TensorFlow.",
+  "Statistics":"Work through descriptive and inferential statistics — this underpins most data roles.",
+  "Pandas":"Practice on a few real datasets; most of the learning curve here is hands-on.",
+  "Django":"Build one small CRUD app end-to-end to internalize the framework's conventions.",
+  "REST APIs":"Build and consume a REST API in a small project — design, not just theory, is what's tested.",
+  "React":"Build a small multi-page app with component state and routing.",
+  "Node.js":"Pair it with your REST API practice — build a backend for a project you already have.",
+  "CI/CD":"Set up a pipeline for one of your existing repos — the concepts click fastest hands-on.",
+  "Docker":"Containerize one project you've already built; that's usually enough to pass screening.",
+  "AWS":"Get comfortable with the core three services (compute, storage, IAM) before going broader.",
+  "Linux":"Daily-drive a Linux environment for a few weeks — command-line fluency is mostly repetition.",
+  "Git":"Practice branching and pull requests on a personal repo until they're second nature.",
+  "Agile":"Understand sprint ceremonies and backlog grooming — most teams expect familiarity, not certification.",
+  "Data Visualization":"Rebuild a dataset's story in a charting tool — the judgment matters more than the tool.",
+  "Communication":"Practice explaining one technical project to a non-technical listener in under two minutes.",
+  "Excel":"Get fluent with pivot tables and lookups — that covers most day-to-day use.",
+  "SQL":"Work through joins, aggregations, and window functions on a real dataset.",
+  "Python":"Build one complete script or small app rather than isolated exercises.",
+  "JavaScript":"Build one interactive page from scratch, no framework, to solidify the fundamentals.",
+  "HTML":"Build a static multi-section page by hand before layering on frameworks.",
+  "CSS":"Recreate a design you like from scratch — it forces you to learn layout properly."
+};
+
+let state = { name:"", email:"", skills:[], goal:"", currentStep:1, maxStep:1, matches:[], goalCategory:null, chosenJob:null, summarySent:false };
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqvyqdl";
+
+function toggleHowItWorks(){
+  const section = document.getElementById('how-it-works');
+  const isHidden = section.style.display === 'none';
+  section.style.display = isHidden ? 'block' : 'none';
+  if(isHidden) section.scrollIntoView({behavior:'smooth'});
+}
+
+/* ---------- Master skill list (for search suggestions) ---------- */
+const ALL_SKILLS = [...new Set(JOBS.flatMap(j => j.skills))].sort();
+const ALL_ROLES = JOBS.map(j => j.title);
+
+function closeSuggestBoxes(){
+  document.getElementById('skillSuggestions').classList.remove('open');
+  document.getElementById('goalSuggestions').classList.remove('open');
+}
+document.addEventListener('click', (e)=>{
+  if(!e.target.closest('#skillInput') && !e.target.closest('#skillSuggestions')) document.getElementById('skillSuggestions').classList.remove('open');
+  if(!e.target.closest('#careerGoalInput') && !e.target.closest('#goalSuggestions')) document.getElementById('goalSuggestions').classList.remove('open');
+});
+
+function renderSkillSuggestions(){
+  const box = document.getElementById('skillSuggestions');
+  const q = document.getElementById('skillInput').value.trim().toLowerCase();
+  const already = state.skills.map(s=>s.toLowerCase());
+  const matches = ALL_SKILLS.filter(s => s.toLowerCase().includes(q) && !already.includes(s.toLowerCase()));
+  if(!q){ box.classList.remove('open'); box.innerHTML=''; return; }
+  box.innerHTML = matches.length
+    ? matches.slice(0,8).map(s=>`<div class="suggest-item" onclick="pickSkill('${s.replace(/'/g,"\\'")}')">${s}</div>`).join('')
+    : `<div class="suggest-empty">No matching skill — press Add to use "${q}" anyway</div>`;
+  box.classList.add('open');
+}
+function pickSkill(skill){
+  document.getElementById('skillInput').value = skill;
+  addSkill();
+  document.getElementById('skillSuggestions').classList.remove('open');
+}
+
+function renderGoalSuggestions(){
+  const box = document.getElementById('goalSuggestions');
+  const raw = document.getElementById('careerGoalInput').value;
+  const q = raw.trim().toLowerCase();
+  if(!q){ box.classList.remove('open'); box.innerHTML=''; return; }
+  const matches = ALL_ROLES.filter(r => r.toLowerCase().includes(q));
+  box.innerHTML = matches.length
+    ? matches.map(r=>`<div class="suggest-item" onclick="pickGoal('${r.replace(/'/g,"\\'")}')">${r}</div>`).join('')
+    : `<div class="suggest-empty">No matching role listed — press outside or continue to use "${raw.trim()}" as your goal</div>`;
+  box.classList.add('open');
+}
+function pickGoal(role){
+  document.getElementById('careerGoalInput').value = role;
+  document.getElementById('goalSuggestions').classList.remove('open');
+}
+
+/* ---------- Stepper ---------- */
+function goToStep(n){
+  if(n > state.maxStep && n !== 6) return;
+  state.currentStep = n;
+  document.getElementById('trailWrap').style.display = 'block';
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('visible'));
+  document.getElementById('step-'+n).classList.add('visible');
+  document.querySelectorAll('.waypoint').forEach(w=>{
+    const s = parseInt(w.dataset.step);
+    w.classList.toggle('active', s===n);
+    w.classList.toggle('done', s < n || (s <= state.maxStep && s < n));
+  });
+  const filledStep = Math.min(n,5);
+  document.getElementById('trailFill').style.width = ((filledStep-1)/4*100)+'%';
+  window.scrollTo({top: document.getElementById('trailWrap').offsetTop, behavior:'smooth'});
+}
+document.querySelectorAll('.waypoint').forEach(w=>{
+  w.addEventListener('click', ()=>{
+    const s = parseInt(w.dataset.step);
+    if(s <= state.maxStep || s === 6) goToStep(s);
+  });
+});
+
+/* ---------- Step 1: Register / Sign in ---------- */
+let registeredUsers = []; // session-only (resets on page reload — no backend/storage)
+
+function switchAuthTab(which){
+  const isReg = which === 'register';
+  document.getElementById('tabRegister').classList.toggle('active', isReg);
+  document.getElementById('tabSignin').classList.toggle('active', !isReg);
+  document.getElementById('registerForm').style.display = isReg ? 'block' : 'none';
+  document.getElementById('signinForm').style.display = isReg ? 'none' : 'block';
+  document.getElementById('registerError').style.display = 'none';
+  document.getElementById('signinError').style.display = 'none';
+}
+
+function enterApp(name, email){
+  state.name = name; state.email = email;
+  document.getElementById('greetHeading').textContent = `Nice to meet you, ${name.split(' ')[0]}.`;
+  document.getElementById('reviewName').textContent = name;
+  state.maxStep = Math.max(state.maxStep, 2);
+  goToStep(2);
+}
+
+function submitRegister(){
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const err = document.getElementById('registerError');
+  if(!name || !email || !password){ err.textContent = "Enter your name, email, and password to continue."; err.style.display='block'; return; }
+  if(registeredUsers.some(u=>u.email.toLowerCase()===email.toLowerCase())){
+    err.textContent = "An account with this email already exists this session — try Sign In instead.";
+    err.style.display='block';
+    return;
+  }
+  err.style.display='none';
+  registeredUsers.push({ name, email, password });
+  enterApp(name, email);
+}
+
+function submitSignIn(){
+  const email = document.getElementById('signinEmail').value.trim();
+  const password = document.getElementById('signinPassword').value;
+  const err = document.getElementById('signinError');
+  const match = registeredUsers.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+  if(!match){
+    err.textContent = registeredUsers.some(u=>u.email.toLowerCase()===email.toLowerCase())
+      ? "Incorrect password."
+      : "No account found this session — register first.";
+    err.style.display='block';
+    return;
+  }
+  err.style.display='none';
+  enterApp(match.name, match.email);
+}
+
+/* ---------- Step 2: Skills ---------- */
+function renderChips(){
+  const box = document.getElementById('skillChips');
+  box.innerHTML = '';
+  state.skills.forEach((s,i)=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.innerHTML = `<span>${s}</span><button aria-label="Remove ${s}" onclick="removeSkill(${i})">&times;</button>`;
+    box.appendChild(chip);
+  });
+}
+function addSkill(){
+  const input = document.getElementById('skillInput');
+  const val = input.value.trim();
+  if(!val) return;
+  if(!state.skills.some(s=>s.toLowerCase()===val.toLowerCase())){
+    state.skills.push(val);
+    renderChips();
+  }
+  input.value = '';
+  document.getElementById('skillSuggestions').classList.remove('open');
+}
+function removeSkill(i){ state.skills.splice(i,1); renderChips(); }
+
+function submitSkills(){
+  const goal = document.getElementById('careerGoalInput').value.trim();
+  const err = document.getElementById('skillsError');
+  // Prefer an exact match against the listed roles (for consistent casing),
+  // but fall back to whatever the user typed — any role name is allowed.
+  const listedGoal = ALL_ROLES.find(r => r.toLowerCase() === goal.toLowerCase());
+  const finalGoal = listedGoal || goal;
+  if(state.skills.length === 0 || !finalGoal){
+    err.textContent = "Add at least one skill and enter a career goal.";
+    err.style.display='block';
+    return;
+  }
+  err.style.display='none';
+  state.goal = finalGoal;
+  document.getElementById('reviewGoal').textContent = finalGoal;
+  document.getElementById('reviewCount').textContent = state.skills.length;
+  state.maxStep = Math.max(state.maxStep, 3);
+  goToStep(3);
+}
+
+/* ---------- Step 3 -> 4: Matching ---------- */
+function normalize(s){ return s.trim().toLowerCase(); }
+
+function findJobs(){
+  const userSkills = state.skills.map(normalize);
+  state.matches = JOBS.map(job=>{
+    const matched = job.skills.filter(s => userSkills.includes(normalize(s)));
+    const missing = job.skills.filter(s => !userSkills.includes(normalize(s)));
+    const pct = Math.round((matched.length / job.skills.length) * 100);
+    return { ...job, matched, missing, pct };
+  }).sort((a,b)=> b.pct - a.pct || a.title.localeCompare(b.title));
+  state.matches.forEach((job,i)=>{ job.rank = i+1; });
+
+  state.goalCategory = findRoleCategory(state.goal);
+
+  renderJobs();
+  state.maxStep = Math.max(state.maxStep, 4);
+  goToStep(4);
+}
+
+function gaugeSVG(pct){
+  const r = 32, c = 2*Math.PI*r;
+  const offset = c - (pct/100)*c;
+  const color = pct >= 60 ? 'var(--growth)' : (pct >= 30 ? 'var(--blaze)' : 'var(--gap)');
+  return `<svg width="78" height="78" viewBox="0 0 78 78">
+    <circle cx="39" cy="39" r="${r}" fill="none" stroke="#2c3a2c" stroke-width="7"/>
+    <circle cx="39" cy="39" r="${r}" fill="none" stroke="${color}" stroke-width="7"
+      stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function buildJobCard(job){
+  const card = document.createElement('div');
+  card.className = 'job-card';
+  const isChosen = state.chosenJob === job.title;
+  card.innerHTML = `
+    <div class="gauge">${gaugeSVG(job.pct)}<div class="gauge-pct">${job.pct}%</div></div>
+    <div class="job-body">
+      <h3 class="job-title">${job.title}</h3>
+      <p class="job-meta">${job.company} · rank #${job.rank}</p>
+      <div class="row-label">Matched skills</div>
+      <div class="skill-row">${ job.matched.length ? job.matched.map(s=>`<span class="skill-tag matched">${s}</span>`).join('') : '<span class="skill-tag missing">none yet</span>' }</div>
+      <div class="row-label">Still needed</div>
+      <div class="skill-row">${ job.missing.length ? job.missing.map(s=>`<span class="skill-tag missing">${s}</span>`).join('') : '<span class="skill-tag matched">nothing — full match</span>' }</div>
+      <button class="job-select-btn ${isChosen?'chosen':''}" onclick="chooseJob('${job.title.replace(/'/g,"\\'")}')">${isChosen ? 'Selected for guidance ✓' : 'Get guidance for this role'}</button>
+      <div class="apply-row">
+        <a class="apply-link" href="https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.title)}" target="_blank" rel="noopener noreferrer">Apply on LinkedIn ↗</a>
+        <a class="apply-link" href="https://www.indeed.com/jobs?q=${encodeURIComponent(job.title)}" target="_blank" rel="noopener noreferrer">Apply on Indeed ↗</a>
+      </div>
+    </div>`;
+  return card;
+}
+
+function renderJobs(){
+  const box = document.getElementById('jobResults');
+  box.innerHTML = '';
+  const cat = state.goalCategory;
+
+  if(!cat){
+    // Free-typed goal that isn't a recognized field — fall back to a plain
+    // skill-ranked list across every role, same as before.
+    state.matches.slice(0,6).forEach(job => box.appendChild(buildJobCard(job)));
+    return;
+  }
+
+  const goalJobs = state.matches.filter(j => cat.roles.includes(j.title));
+  const otherJobs = state.matches.filter(j => !cat.roles.includes(j.title)).slice(0,3);
+
+  const goalHeading = document.createElement('div');
+  goalHeading.className = 'match-section-title';
+  goalHeading.textContent = `Vacancies for "${state.goal}"`;
+  box.appendChild(goalHeading);
+
+  const goalNote = document.createElement('p');
+  goalNote.className = 'match-section-note';
+  goalNote.textContent = goalJobs.length
+    ? `Open roles in ${cat.name}, ranked by how many of your listed skills each one needs.`
+    : `No open roles in ${cat.name} matched to your skills yet — see related roles below.`;
+  box.appendChild(goalNote);
+
+  goalJobs.forEach(job => box.appendChild(buildJobCard(job)));
+
+  if(otherJobs.length){
+    const relHeading = document.createElement('div');
+    relHeading.className = 'match-section-title';
+    relHeading.textContent = 'Other related roles you might also fit';
+    box.appendChild(relHeading);
+
+    const relNote = document.createElement('p');
+    relNote.className = 'match-section-note';
+    relNote.textContent = `Outside ${cat.name}, but still worth a look based on the skills you listed.`;
+    box.appendChild(relNote);
+
+    otherJobs.forEach(job => box.appendChild(buildJobCard(job)));
+  }
+}
+
+function chooseJob(title){
+  state.chosenJob = title;
+  renderJobs();
+}
+
+/* ---------- Step 5: Guidance ---------- */
+document.getElementById('toGuidanceBtn').addEventListener('click', ()=>{
+  if(!state.chosenJob){
+    // default to an exact title match, else the top-ranked role within the
+    // goal's category, else the top overall match
+    const exactMatch = state.matches.find(j=>j.title === state.goal);
+    const categoryTop = state.goalCategory
+      ? state.matches.find(j=>state.goalCategory.roles.includes(j.title))
+      : null;
+    state.chosenJob = (exactMatch || categoryTop || state.matches[0]).title;
+  }
+  buildGuidance();
+});
+
+function buildGuidance(){
+  const job = state.matches.find(j=>j.title === state.chosenJob);
+  const lead = document.getElementById('guidanceLead');
+  const strengths = document.getElementById('guidanceStrengths');
+  const list = document.getElementById('learnList');
+  list.style.display = 'block';
+
+  strengths.style.display = 'block';
+  strengths.innerHTML = job.matched.length
+    ? `<div class="row-label">Skills you already bring to this role</div>
+       <div class="skill-row">${job.matched.map(s=>`<span class="skill-tag matched">${s}</span>`).join('')}</div>`
+    : `<div class="row-label">None of your listed skills matched this role yet</div>`;
+
+  const jobCategory = ROLE_CATEGORIES.find(cat => cat.roles.includes(job.title));
+  const roleIntro = jobCategory ? (ROLE_GUIDANCE_INTRO[jobCategory.name] || '') : '';
+  const roleIntroHTML = roleIntro ? `<p style="margin:0 0 10px; color:var(--text-dim);">${roleIntro}</p>` : '';
+
+  if(job.missing.length === 0){
+    lead.innerHTML = `${roleIntroHTML}Based on the skills you listed, you already match every requirement for <b>${job.title}</b>. You're qualified to apply now — spend remaining prep time on interview practice instead.`;
+    list.innerHTML = `<p style="color:var(--text-dim); font-size:14px; margin:0;">No skill gap to close for this role.</p>`;
+  } else {
+    const first = job.missing[0];
+    lead.innerHTML = `${roleIntroHTML}Based on the ${state.skills.length} skill${state.skills.length===1?'':'s'} you listed, you're a ${job.pct}% match for <b>${job.title}</b>. To qualify, learn <b>${first}</b>${job.missing.length>1 ? `, then work through the rest below` : ''}.`;
+    list.innerHTML = job.missing.map((skill,i)=>{
+      const otherRoles = state.matches
+        .filter(m => m.title !== job.title && m.skills.includes(skill))
+        .slice(0,2)
+        .map(m => m.title);
+      const impact = otherRoles.length ? `<p style="margin:6px 0 0; color:var(--text-faint); font-size:12.5px;">Also moves you closer to ${otherRoles.join(' and ')}, based on your current matches.</p>` : '';
+      return `
+      <div class="learn-item">
+        <div class="learn-badge mono">${String(i+1).padStart(2,'0')}</div>
+        <div class="learn-body">
+          <h4>${skill}</h4>
+          <p>${LEARNING_HINTS[skill] || 'Build one small project using this skill directly — applied practice closes gaps faster than theory alone.'}</p>
+          ${impact}
+        </div>
+      </div>`;
+    }).join('');
+  }
+  sendProfileSummary(job);
+  state.maxStep = Math.max(state.maxStep, 5);
+  goToStep(5);
+}
+
+/* ---------- Formspree: profile summary (sent once, silently) ---------- */
+async function sendProfileSummary(job){
+  if(state.summarySent) return;
+  state.summarySent = true;
+  try{
+    await fetch(FORMSPREE_ENDPOINT, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Accept":"application/json" },
+      body: JSON.stringify({
+        form_type: "Profile summary",
+        _subject: `Waypoint: new profile — ${state.name} (${state.goal})`,
+        name: state.name,
+        email: state.email,
+        career_goal: state.goal,
+        skills_listed: state.skills.join(", "),
+        chosen_role: job.title,
+        match_percentage: job.pct + "%",
+        skills_still_needed: job.missing.join(", ") || "none"
+      })
+    });
+  }catch(e){
+    state.summarySent = false; // allow retry on next guidance visit if it failed
+  }
+}
+
+/* ---------- Formspree: contact / query form ---------- */
+async function submitContactForm(){
+  const name = document.getElementById('contactName').value.trim() || state.name;
+  const email = document.getElementById('contactEmail').value.trim() || state.email;
+  const message = document.getElementById('contactMessage').value.trim();
+  const err = document.getElementById('contactError');
+  const status = document.getElementById('contactStatus');
+  const btn = document.getElementById('contactSubmitBtn');
+
+  if(!message){ err.style.display='block'; status.style.display='none'; return; }
+  err.style.display='none';
+
+  btn.disabled = true; btn.textContent = "Sending...";
+
+  // Pull in everything this user has entered across the site so far, so the
+  // question email arrives with their full registered profile attached.
+  const chosenJobData = state.matches.find(j => j.title === state.chosenJob);
+
+  try{
+    const res = await fetch(FORMSPREE_ENDPOINT, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Accept":"application/json" },
+      body: JSON.stringify({
+        form_type: "Contact query",
+        _subject: `Waypoint: new question from ${name || "a visitor"}`,
+        name: name || "(not provided)",
+        email: email || "(not provided)",
+        message: message,
+        career_goal: state.goal || "(not set)",
+        skills_listed: state.skills.length ? state.skills.join(", ") : "(none)",
+        chosen_role: state.chosenJob || "(not chosen yet)",
+        match_percentage: chosenJobData ? chosenJobData.pct + "%" : "(n/a)",
+        skills_still_needed: chosenJobData ? (chosenJobData.missing.join(", ") || "none") : "(n/a)"
+      })
+    });
+    if(res.ok){
+      status.textContent = "Sent — we'll get back to you soon.";
+      status.style.color = "var(--growth)";
+      status.style.display = "block";
+      document.getElementById('contactMessage').value = "";
+    } else {
+      throw new Error("Send failed");
+    }
+  }catch(e){
+    status.textContent = "Something went wrong — please try again.";
+    status.style.color = "var(--gap)";
+    status.style.display = "block";
+  }
+  btn.disabled = false; btn.textContent = "Send question";
+}
+
+/* ---------- Restart ---------- */
+function restart(){
+  state = { name:"", email:"", skills:[], goal:"", currentStep:1, maxStep:1, matches:[], goalCategory:null, chosenJob:null, summarySent:false };
+  document.getElementById('regName').value = '';
+  document.getElementById('regEmail').value = '';
+  document.getElementById('regPassword').value = '';
+  document.getElementById('signinEmail').value = '';
+  document.getElementById('signinPassword').value = '';
+  switchAuthTab('register');
+  document.getElementById('skillInput').value = '';
+  document.getElementById('careerGoalInput').value = '';
+  document.getElementById('contactName').value = '';
+  document.getElementById('contactEmail').value = '';
+  document.getElementById('contactMessage').value = '';
+  document.getElementById('contactStatus').style.display = 'none';
+  document.getElementById('contactError').style.display = 'none';
+  document.getElementById('guidanceLead').textContent = 'Search jobs above and pick a role to see your personalized skill-gap guidance here.';
+  document.getElementById('guidanceStrengths').style.display = 'none';
+  document.getElementById('learnList').style.display = 'none';
+  document.getElementById('jobResults').innerHTML = '<p style="color:var(--text-faint); font-size:14px;">No search run yet — fill in your profile above, then click "Find jobs" to see your ranked matches here.</p>';
+  renderChips();
+  goToStep(1);
+}
+</script>
+</body>
+</html>
